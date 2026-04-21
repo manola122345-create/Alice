@@ -1,0 +1,98 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  --font-heading: 'Playfair Display', serif;
+  --font-body: 'Inter', sans-serif;
+  --color-gold: #d4af37;
+  --color-gold-light: #f4e4bc;
+  --color-gold-dark: #b8960c;
+  --color-dark: #0a0a0f;
+  --color-dark-light: #12121a;
+  --color-dark-card: #1a1a25;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-dark);
+  color: #e5e5e5;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-gold);
+  border-radius: 4px;
+}
+
+::selection {
+  background: var(--color-gold);
+  color: var(--color-dark);
+}
+
+.gold-gradient {
+  background: linear-gradient(135deg, #d4af37, #f4e4bc, #d4af37);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.glass-card {
+  background: rgba(26, 26, 37, 0.8);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(212, 175, 55, 0.15);
+}
+
+.glow-gold {
+  box-shadow: 0 0 40px rgba(212, 175, 55, 0.15);
+}
+
+.btn-gold {
+  background: linear-gradient(135deg, #d4af37, #b8960c);
+  color: #0a0a0f;
+  font-weight: 600;
+  padding: 12px 32px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-gold:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+}
+
+.btn-outline-gold {
+  background: transparent;
+  color: #d4af37;
+  font-weight: 500;
+  padding: 12px 32px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  border: 1px solid #d4af37;
+  cursor: pointer;
+}
+
+.btn-outline-gold:hover {
+  background: rgba(212, 175, 55, 0.1);
+  transform: translateY(-2px);
+}
