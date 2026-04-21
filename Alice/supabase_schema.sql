@@ -38,6 +38,7 @@ CREATE TABLE IF NOT EXISTS bookings (
 CREATE TABLE IF NOT EXISTS messages (
   id TEXT PRIMARY KEY,
   sender_id TEXT NOT NULL,
+  sender_name TEXT DEFAULT '',
   receiver_id TEXT NOT NULL,
   content TEXT NOT NULL,
   read BOOLEAN DEFAULT FALSE,
