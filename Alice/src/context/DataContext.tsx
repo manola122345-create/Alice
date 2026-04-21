@@ -69,6 +69,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
         setMessages(messagesRes.data.map(m => ({
           id: m.id,
           senderId: m.sender_id,
+          senderName: m.sender_name || '',
           receiverId: m.receiver_id,
           content: m.content,
           read: m.read,
@@ -136,6 +137,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
       const { error } = await supabase.from(TABLES.MESSAGES).insert({
         id: message.id,
         sender_id: message.senderId,
+        sender_name: message.senderName,
         receiver_id: message.receiverId,
         content: message.content,
         read: message.read,
