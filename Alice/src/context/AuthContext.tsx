@@ -35,60 +35,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         .eq('email', email)
         .eq('password', password)
         .single();
-
       if (error || !data) return false;
-
-      const clientData: Client = {
-        id: data.id,
-        email: data.email,
-        password: data.password,
-        name: data.name,
-        phone: data.phone || '',
-        createdAt: data.created_at,
-      };
-      setClient(clientData);
+      setClient({ id: data.id, email: data.email, password: data.password, name: data.name, phone: data.phone || '', createdAt: data.created_at });
       return true;
-    } catch {
-      return false;
-    }
+    } catch { return false; }
   };
 
   const register = async (userData: Omit<Client, 'id' | 'createdAt'>): Promise<boolean> => {
     try {
-      const { data: existing } = await supabase
-        .from(TABLES.CLIENTS)
-        .select('id')
-        .eq('email', userData.email)
-        .maybeSingle();
-
+      const { data: existing } = await supabase.from(TABLES.CLIENTS).select('id').eq('email', userData.email).maybeSingle();
       if (existing) return false;
-
-      const { data, error } = await supabase
-        .from(TABLES.CLIENTS)
-        .insert({
-          email: userData.email,
-          password: userData.password,
-          name: userData.name,
-          phone: userData.phone,
-        })
-        .select()
-        .single();
-
+      const { data, error } = await supabase.from(TABLES.CLIENTS).insert({ email: userData.email, password: userData.password, name: userData.name, phone: userData.phone }).select().single();
       if (error || !data) return false;
-
-      const clientData: Client = {
-        id: data.id,
-        email: data.email,
-        password: data.password,
-        name: data.name,
-        phone: data.phone || '',
-        createdAt: data.created_at,
-      };
-      setClient(clientData);
+      setClient({ id: data.id, email: data.email, password: data.password, name: data.name, phone: data.phone || '', createdAt: data.created_at });
       return true;
-    } catch {
-      return false;
-    }
+    } catch { return false; }
   };
 
   const logout = () => setClient(null);
