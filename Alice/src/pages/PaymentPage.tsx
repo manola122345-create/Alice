@@ -5,7 +5,6 @@ import { CreditCard, Bitcoin, CheckCircle, Copy, ExternalLink, ArrowLeft, Loader
 import { useData } from '../context/DataContext';
 import { useLanguage } from '../context/LanguageContext';
 
-const PLISIO_SECRET_KEY = import.meta.env.VITE_PLISIO_SECRET_KEY || '';
 const INTERAC_EMAIL = import.meta.env.VITE_INTERAC_EMAIL || 'paiement@alice-elite.com';
 
 export default function PaymentPage() {
@@ -57,17 +56,17 @@ export default function PaymentPage() {
     setLoading(true);
     setError('');
     try {
-      const params = new URLSearchParams({
-        api_key: PLISIO_SECRET_KEY,
-        currency: 'USDT',
-        amount: booking.depositAmount.toString(),
-        order_number: booking.id,
-        order_name: `Acompte Réservation - Alice Elite`,
-        success_url: `${window.location.origin}/dashboard`,
-        fail_url: `${window.location.origin}/payment/${booking.id}`,
+      const res = await fetch('/.netlify/functions/plisio-invoice', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount: booking.depositAmount,
+          orderId: booking.id,
+          orderName: `Acompte Réservation - Alice Elite`,
+          successUrl: `${window.location.origin}/dashboard`,
+          failUrl: `${window.location.origin}/payment/${booking.id}`,
+        }),
       });
-
-      const res = await fetch(`https://plisio.net/api/v1/invoices/new?${params}`);
       const json = await res.json();
 
       if (json.status === 'success' && json.data?.invoice_url) {
