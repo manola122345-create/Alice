@@ -9,4 +9,5 @@ export const TABLES = {
   CLIENTS: 'clients',
   BOOKINGS: 'bookings',
   MESSAGES: 'messages',
+  SITE_DATA: 'site_data',
 } as const;
