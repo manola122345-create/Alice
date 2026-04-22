@@ -4,7 +4,7 @@ import { SiteData, defaultSiteData, Booking, Message } from '../lib/data';
 
 interface DataContextType {
   data: SiteData;
-  updateData: (updates: Partial<SiteData>) => void;
+  updateData: (updates: Partial<SiteData>) => Promise<void>;
   bookings: Booking[];
   addBooking: (booking: Booking) => Promise<void>;
   updateBooking: (id: string, updates: Partial<Booking>) => Promise<void>;
@@ -16,32 +16,23 @@ interface DataContextType {
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
-const DATA_KEY = 'alice_site_data';
-
-function loadSiteData(): SiteData {
-  const saved = localStorage.getItem(DATA_KEY);
-  if (saved) {
-    try { return { ...defaultSiteData, ...JSON.parse(saved) }; }
-    catch { return defaultSiteData; }
-  }
-  return defaultSiteData;
-}
 
 export function DataProvider({ children }: { children: ReactNode }) {
-  const [data, setData] = useState<SiteData>(loadSiteData);
+  const [data, setData] = useState<SiteData>(defaultSiteData);
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
 
-  useEffect(() => {
-    localStorage.setItem(DATA_KEY, JSON.stringify(data));
-  }, [data]);
-
   const refreshData = useCallback(async () => {
     try {
-      const [bookingsRes, messagesRes] = await Promise.all([
+      const [siteRes, bookingsRes, messagesRes] = await Promise.all([
+        supabase.from(TABLES.SITE_DATA).select('data').eq('id', 'main').maybeSingle(),
         supabase.from(TABLES.BOOKINGS).select('*').order('created_at', { ascending: false }),
         supabase.from(TABLES.MESSAGES).select('*').order('created_at', { ascending: true }),
       ]);
+
+      if (siteRes.data?.data) {
+        setData({ ...defaultSiteData, ...siteRes.data.data });
+      }
 
       if (bookingsRes.data) {
         setBookings(bookingsRes.data.map(b => ({
@@ -85,8 +76,18 @@ export function DataProvider({ children }: { children: ReactNode }) {
     refreshData();
   }, [refreshData]);
 
-  const updateData = (updates: Partial<SiteData>) => {
-    setData(prev => ({ ...prev, ...updates }));
+  const updateData = async (updates: Partial<SiteData>) => {
+    const newData = { ...data, ...updates };
+    setData(newData);
+    try {
+      await supabase.from(TABLES.SITE_DATA).upsert({
+        id: 'main',
+        data: newData,
+        updated_at: new Date().toISOString(),
+      });
+    } catch (err) {
+      console.error('Error saving site data:', err);
+    }
   };
 
   const addBooking = async (booking: Booking) => {
@@ -109,9 +110,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
         payment_method: booking.paymentMethod || '',
         payment_status: booking.paymentStatus || 'unpaid',
       });
-      if (!error) {
-        setBookings(prev => [booking, ...prev]);
-      }
+      if (!error) setBookings(prev => [booking, ...prev]);
     } catch (err) {
       console.error('Error adding booking:', err);
     }
@@ -124,7 +123,6 @@ export function DataProvider({ children }: { children: ReactNode }) {
       if (updates.depositPaid !== undefined) dbUpdates.deposit_paid = updates.depositPaid;
       if (updates.paymentMethod !== undefined) dbUpdates.payment_method = updates.paymentMethod;
       if (updates.paymentStatus !== undefined) dbUpdates.payment_status = updates.paymentStatus;
-
       await supabase.from(TABLES.BOOKINGS).update(dbUpdates).eq('id', id);
       setBookings(prev => prev.map(b => b.id === id ? { ...b, ...updates } : b));
     } catch (err) {
@@ -142,9 +140,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
         content: message.content,
         read: message.read,
       });
-      if (!error) {
-        setMessages(prev => [...prev, message]);
-      }
+      if (!error) setMessages(prev => [...prev, message]);
     } catch (err) {
       console.error('Error adding message:', err);
     }
