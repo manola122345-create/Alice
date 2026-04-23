@@ -23,7 +23,7 @@ export default function Home() {
         <div className="absolute bottom-20 left-10 w-96 h-96 bg-[#d4af37]/3 rounded-full blur-3xl" />
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="grid lg:grid-cols-2 gap-8 items-center">
             {/* Text content */}
             <motion.div
           initial={{ opacity: 0, x: -50 }}
@@ -67,9 +67,9 @@ export default function Home() {
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="relative hidden lg:block"
+              className="relative block order-first lg:order-last"
             >
-              <div className="relative aspect-[3/4] max-w-md mx-auto">
+              <div className="relative aspect-[3/4] max-w-xs mx-auto lg:max-w-md">
                 {/* Frame */}
                 <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-[#d4af37]/20 to-transparent rotate-3 scale-[0.98]" />
                 <div className="absolute inset-0 rounded-3xl border border-[#d4af37]/20 -rotate-2 scale-[0.99]" />
