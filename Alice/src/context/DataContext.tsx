@@ -4,6 +4,7 @@ import { SiteData, defaultSiteData, Booking, Message } from '../lib/data';
 
 interface DataContextType {
   data: SiteData;
+  loading: boolean;
   updateData: (updates: Partial<SiteData>) => Promise<void>;
   bookings: Booking[];
   addBooking: (booking: Booking) => Promise<void>;
@@ -21,6 +22,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const [data, setData] = useState<SiteData>(defaultSiteData);
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const refreshData = useCallback(async () => {
     try {
@@ -69,6 +71,8 @@ export function DataProvider({ children }: { children: ReactNode }) {
       }
     } catch (err) {
       console.error('Error fetching data:', err);
+    } finally {
+      setLoading(false);
     }
   }, []);
 
@@ -162,9 +166,20 @@ export function DataProvider({ children }: { children: ReactNode }) {
     );
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-2 border-[#d4af37] border-t-transparent rounded-full animate-spin" />
+          <p className="text-[#d4af37] font-heading text-sm tracking-widest">ALICE ELITE</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <DataContext.Provider value={{
-      data, updateData,
+      data, loading, updateData,
       bookings, addBooking, updateBooking,
       messages, addMessage, markMessageRead,
       getConversation, refreshData,
