@@ -56,9 +56,13 @@ export default function PaymentPage() {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch('/.netlify/functions/plisio-invoice', {
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const res = await fetch(`${supabaseUrl}/functions/v1/plisio-invoice`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+        },
         body: JSON.stringify({
           amount: booking.depositAmount,
           orderId: booking.id,
