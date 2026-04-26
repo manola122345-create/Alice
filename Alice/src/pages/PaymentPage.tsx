@@ -169,7 +169,7 @@ export default function PaymentPage() {
               )}
 
               <div className="grid gap-4">
-                {/* Stripe */}
+                {/* Stripe - temporairement masqué
                 <button onClick={handleStripe} disabled={loading}
                   className="flex items-center gap-4 p-5 rounded-xl border-2 border-white/10 hover:border-[#d4af37]/50 bg-white/5 hover:bg-[#d4af37]/5 transition-all text-left group disabled:opacity-50">
                   <div className="w-12 h-12 rounded-full bg-purple-500/10 flex items-center justify-center group-hover:bg-purple-500/20 transition-colors">
@@ -180,6 +180,7 @@ export default function PaymentPage() {
                     <p className="text-gray-500 text-sm">Visa, Mastercard, Apple Pay, Google Pay...</p>
                   </div>
                 </button>
+                */}
 
                 {/* Interac */}
                 <button onClick={handleInterac}
