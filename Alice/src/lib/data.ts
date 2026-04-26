@@ -93,7 +93,7 @@ export interface Booking {
   depositPaid: boolean;
   totalAmount: number;
   depositAmount: number;
-  paymentMethod?: 'interac' | 'plisio' | '';
+  paymentMethod?: 'interac' | 'plisio' | 'stripe' | '';
   paymentStatus?: 'unpaid' | 'pending' | 'paid';
   createdAt: string;
 }
