@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://alice-l6sw.onrender.com/sitemap.xml
