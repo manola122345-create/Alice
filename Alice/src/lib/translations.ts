@@ -16,7 +16,7 @@ export const translations = {
     
     // Hero
     hero_title: 'Bienvenue chez',
-    hero_subtitle: 'Compagne elegante et Raffinee',
+    hero_subtitle: 'Escorte élégante et Raffinée',
     hero_cta: 'Reserver un rendez-vous',
     hero_secondary: 'Decouvrir mes services',
     
@@ -178,7 +178,7 @@ export const translations = {
     
     // Hero
     hero_title: 'Welcome to the world of',
-    hero_subtitle: 'Elegant & Refined Companion',
+    hero_subtitle: 'Elegant & Refined Escort',
     hero_cta: 'Book an Appointment',
     hero_secondary: 'Discover My Services',
     
